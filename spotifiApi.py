@@ -1,172 +1,123 @@
-import requests
-import json
 import base64
+import os
+import re
+
+import requests
+
 
 class SpotifyBuscar:
-    """Búsqueda de canciones en Spotify con autenticación"""
-    
     def __init__(self, client_id=None, client_secret=None):
         self.base_url = "https://api.spotify.com/v1"
         self.auth_url = "https://accounts.spotify.com/api/token"
         self.client_id = client_id
         self.client_secret = client_secret
         self.token = None
-        
-        # Si se proporcionan credenciales, obtener token
+
         if client_id and client_secret:
-            self.token = self.obtener_token_acceso(client_id, client_secret)
-    
-    def obtener_token_acceso(self, client_id, client_secret):
-        """
-        Obtiene token de acceso para la API de Spotify
-        
-        Args:
-            client_id (str): Client ID de Spotify Developer
-            client_secret (str): Client Secret de Spotify Developer
-            
-        Returns:
-            str: Token de acceso
-        """
-        try:
-            # Codificar credenciales en Base64
-            credentials = base64.b64encode(
-                f"{client_id}:{client_secret}".encode()
-            ).decode()
-            
-            headers = {
-                'Authorization': f'Basic {credentials}',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-            
-            data = {'grant_type': 'client_credentials'}
-            
-            response = requests.post(self.auth_url, headers=headers, data=data, timeout=5)
-            
-            if response.status_code == 200:
-                token = response.json().get('access_token')
-                print(f"✓ Token de Spotify obtenido correctamente")
-                return token
-            else:
-                print(f"✗ Error obteniendo token: {response.status_code}")
-                return None
-                
-        except Exception as e:
-            print(f"✗ Error en autenticación: {e}")
+            try:
+                self.token = self.obtener_token_acceso()
+            except Exception:
+                self.token = None
+
+    @classmethod
+    def from_env_or_defaults(cls):
+        client_id = os.environ.get("SPOTIFY_CLIENT_ID", "b55baa7b53434bf6ad0024737488a8fc")
+        client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET", "54769e53ad32448e83b09a75f23b12eb")
+        return cls(client_id, client_secret)
+
+    def obtener_token_acceso(self):
+        if not self.client_id or not self.client_secret:
             return None
-    
-    def buscar_cancion(self, query, limite=10):
-        """
-        Busca canciones en Spotify
-        
-        Args:
-            query (str): Término de búsqueda (artista, canción, etc)
-            limite (int): Número máximo de resultados
-            
-        Returns:
-            list: Lista de canciones encontradas
-        """
+
+        credentials = base64.b64encode(
+            f"{self.client_id}:{self.client_secret}".encode("utf-8")
+        ).decode("utf-8")
+
+        response = requests.post(
+            self.auth_url,
+            headers={
+                "Authorization": f"Basic {credentials}",
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            data={"grant_type": "client_credentials"},
+            timeout=15,
+        )
+        response.raise_for_status()
+        return response.json()["access_token"]
+
+    def _do_search(self, query, limite, market):
+        params = {
+            "q": query,
+            "type": "track",
+            "limit": limite,
+        }
+        if market:
+            params["market"] = market
+
+        return requests.get(
+            f"{self.base_url}/search",
+            headers={"Authorization": f"Bearer {self.token}"},
+            params=params,
+            timeout=20,
+        )
+
+    def buscar_cancion(self, query, limite=10, market=None):
+        query = str(query or "").strip()
+        if not query:
+            return []
+
+        limite = int(limite)
+        limite = min(max(limite, 1), 10)
+        market = market or os.environ.get("SPOTIFY_MARKET", "AR")
+
         if not self.token:
-            print("✗ Sin token de autenticación. Configurar credenciales de Spotify.")
-            return []
-        
-        try:
-            headers = {
-                'Authorization': f'Bearer {self.token}'
-            }
-            
-            params = {
-                'q': query,
-                'type': 'track',
-                'limit': limite
-            }
-            
-            response = requests.get(
-                f"{self.base_url}/search",
-                headers=headers,
-                params=params,
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                datos = response.json()
-                return self._formato_resultados(datos)
-            else:
-                print(f"✗ Error en búsqueda: {response.status_code}")
-                if response.status_code == 401:
-                    print("✗ Token inválido. Reintentando autenticación...")
-                    self.token = self.obtener_token_acceso(self.client_id, self.client_secret)
-                return []
-                
-        except Exception as e:
-            print(f"✗ Error en búsqueda: {e}")
-            return []
-    
-    def _formato_resultados(self, datos):
-        """Formatea los resultados de la búsqueda"""
-        resultados = []
-        
-        if isinstance(datos, dict) and 'tracks' in datos:
-            for track in datos.get('tracks', {}).get('items', []):
-                resultado = {
-                    'nombre': track.get('name', 'Desconocido'),
-                    'artista': ', '.join([a.get('name', '') for a in track.get('artists', [])]),
-                    'url': track.get('external_urls', {}).get('spotify', ''),
-                    'id': track.get('id', ''),
-                    'preview': track.get('preview_url', ''),
-                    'imagen': track.get('album', {}).get('images', [{}])[0].get('url', '') if track.get('album', {}).get('images') else ''
+            self.token = self.obtener_token_acceso()
+            if not self.token:
+                raise RuntimeError(
+                    "No hay token de Spotify. Configura SPOTIFY_CLIENT_ID y SPOTIFY_CLIENT_SECRET."
+                )
+
+        response = self._do_search(query, limite, market)
+
+        if response.status_code == 401:
+            self.token = self.obtener_token_acceso()
+            response = self._do_search(query, limite, market)
+
+        if response.status_code == 400:
+            safe_query = re.sub(r"\s+", " ", re.sub(r"[^\w\s\-\.,'&/()]", " ", query)).strip()
+            if safe_query and safe_query != query:
+                retry = self._do_search(safe_query, limite, market)
+                if retry.status_code < 400:
+                    response = retry
+            if response.status_code == 400 and market:
+                retry_no_market = self._do_search(query, limite, None)
+                if retry_no_market.status_code < 400:
+                    response = retry_no_market
+
+        response.raise_for_status()
+        return self._formatear_resultados(response.json())
+
+    def _formatear_resultados(self, data):
+        tracks = data.get("tracks", {}).get("items", [])
+        results = []
+
+        for track in tracks:
+            album = track.get("album", {})
+            images = album.get("images", [])
+            results.append(
+                {
+                    "id": track.get("id", ""),
+                    "nombre": track.get("name", "Desconocido"),
+                    "title": track.get("name", "Desconocido"),
+                    "artista": ", ".join(artist.get("name", "") for artist in track.get("artists", [])),
+                    "artist": ", ".join(artist.get("name", "") for artist in track.get("artists", [])),
+                    "album": album.get("name", "Sin album"),
+                    "imagen": images[0].get("url", "") if images else "",
+                    "cover_url": images[0].get("url", "") if images else "",
+                    "url": track.get("external_urls", {}).get("spotify", ""),
+                    "preview": track.get("preview_url", ""),
+                    "genre": "Desconocido",
                 }
-                resultados.append(resultado)
-        
-        return resultados
-    
-    def obtener_artista(self, artist_id):
-        """Obtiene información de un artista"""
-        if not self.token:
-            return None
-        
-        try:
-            headers = {'Authorization': f'Bearer {self.token}'}
-            response = requests.get(
-                f"{self.base_url}/artists/{artist_id}",
-                headers=headers,
-                timeout=10
             )
-            
-            if response.status_code == 200:
-                return response.json()
-            return None
-        except Exception as e:
-            print(f"✗ Error obteniendo artista: {e}")
-            return None
-    
-    def obtener_album(self, album_id):
-        """Obtiene información de un álbum"""
-        if not self.token:
-            return None
-        
-        try:
-            headers = {'Authorization': f'Bearer {self.token}'}
-            response = requests.get(
-                f"{self.base_url}/albums/{album_id}",
-                headers=headers,
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                return response.json()
-            return None
-        except Exception as e:
-            print(f"✗ Error obteniendo álbum: {e}")
-            return None
-            )
-            
-            if response.status_code == 200:
-                datos = response.json()
-                return self._formato_resultados(datos)
-            else:
-                print(f"Error en búsqueda: {response.status_code}")
-                return []
-                
-        except Exception as e:
-            print(f"Error en búsqueda con token: {e}")
-            return []
+
+        return results

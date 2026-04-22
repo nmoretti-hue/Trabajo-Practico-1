@@ -1,1 +1,125 @@
-["musica\\moodmode-no-copyright-music-201745.mp3", "musica\\primefacts7-adventure-music-prime-facts7-223351.mp3"]
+{
+  "library": [
+    {
+      "id": "0d30e2c649e1822a5ecf40bd04f5d154",
+      "path": "musica\\moodmode-no-copyright-music-201745.mp3",
+      "title": "moodmode-no-copyright-music-201745",
+      "artist": "Desconocido",
+      "album": "Desconocido",
+      "genre": "Desconocido",
+      "duration": 136.032,
+      "cover_path": "",
+      "source": "local"
+    },
+    {
+      "id": "44ac4a77a9b0b120a09fc87eb0150428",
+      "path": "musica\\primefacts7-adventure-music-prime-facts7-223351.mp3",
+      "title": "primefacts7-adventure-music-prime-facts7-223351",
+      "artist": "Desconocido",
+      "album": "Desconocido",
+      "genre": "Desconocido",
+      "duration": 415.47753125,
+      "cover_path": "",
+      "source": "local"
+    },
+    {
+      "id": "221aa48f68d0470d939a0e25fa22dabe",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\daynigthmorning-aura-273351.mp3",
+      "title": "daynigthmorning-aura-273351",
+      "artist": "Desconocido",
+      "album": "Desconocido",
+      "genre": "Desconocido",
+      "duration": 170.031,
+      "cover_path": "",
+      "source": "local"
+    },
+    {
+      "id": "543eda6d3b5b1d2a8426dedb26fdfa88",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\daynigthmorning-motivational-background-corporate-city-273359 (1).mp3",
+      "title": "daynigthmorning-motivational-background-corporate-city-273359 (1)",
+      "artist": "Desconocido",
+      "album": "Desconocido",
+      "genre": "Desconocido",
+      "duration": 90.0701875,
+      "cover_path": "",
+      "source": "local"
+    },
+    {
+      "id": "2671da06af639aebb19183b4b5a8fbdd",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\🎷Homero RKT 3🍻 Seba Vallejos (EL HUMO TE MAREA) - SEBA VALLEJOS.mp3",
+      "title": "🎷Homero RKT 3🍻 Seba Vallejos (EL HUMO TE MAREA)",
+      "artist": "SEBA VALLEJOS",
+      "album": "Desconocido",
+      "genre": "Desconocido",
+      "duration": 170.568,
+      "cover_path": "",
+      "source": "local"
+    },
+    {
+      "id": "3530f342593762a74fce70585c9f8c60",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\homero-rkt-3-dj-seba-vallejos-0WC7ZnaOVSuC024gsmq2ZE.mp3",
+      "title": "Homero Rkt 3",
+      "artist": "DJ Seba Vallejos",
+      "album": "Homero Rkt 3",
+      "genre": "Desconocido",
+      "duration": 172.176,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\0WC7ZnaOVSuC024gsmq2ZE.jpg",
+      "source": "spotify_youtube"
+    },
+    {
+      "id": "62d89e9861896e1ae559281f46eacc59",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\homero-rkt-2-dj-seba-vallejos-58kgPmhxedfOfjjAQQIsnA.mp3",
+      "title": "Homero Rkt 2",
+      "artist": "DJ Seba Vallejos",
+      "album": "Homero Rkt 2",
+      "genre": "Desconocido",
+      "duration": 172.176,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\58kgPmhxedfOfjjAQQIsnA.jpg",
+      "source": "spotify_youtube"
+    },
+    {
+      "id": "bf70f904df9545105b40da98b5b4f56c",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\homero-rkt-dj-seba-vallejos-54hG4dU5HO23Bo1x0JtXxu.mp3",
+      "title": "Homero Rkt",
+      "artist": "DJ Seba Vallejos",
+      "album": "Homero Rkt",
+      "genre": "Desconocido",
+      "duration": 172.176,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\54hG4dU5HO23Bo1x0JtXxu.jpg",
+      "source": "spotify_youtube"
+    },
+    {
+      "id": "fe6d61001ac4b4baebcb1e68bac28773",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\manteca-shinzo-1T6pPJ6qYi19IZnuK7yk5f.mp3",
+      "title": "Manteca",
+      "artist": "shinzo",
+      "album": "Manteca",
+      "genre": "Desconocido",
+      "duration": 73.56,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\1T6pPJ6qYi19IZnuK7yk5f.jpg",
+      "source": "spotify_youtube"
+    },
+    {
+      "id": "7e14f7df3f8f3870179cc5f8d990d66e",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\eu-bata-bzrt-session-el-chad-pirata-flippylarata-music-53ndmbUXcAR7leedOnMHij.mp3",
+      "title": "EU BATA – BZRT Session (El Chad Pirata)",
+      "artist": "FlippyLaRata MUSIC",
+      "album": "EU BATA – BZRT Session (El Chad Pirata)",
+      "genre": "Desconocido",
+      "duration": 116.016,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\53ndmbUXcAR7leedOnMHij.jpg",
+      "source": "spotify_youtube"
+    }
+  ],
+  "playlists": {
+    "Favoritos": [
+      "0d30e2c649e1822a5ecf40bd04f5d154",
+      "44ac4a77a9b0b120a09fc87eb0150428"
+    ],
+    "koko": [
+      "0d30e2c649e1822a5ecf40bd04f5d154",
+      "7e14f7df3f8f3870179cc5f8d990d66e",
+      "bf70f904df9545105b40da98b5b4f56c"
+    ]
+  }
+}
