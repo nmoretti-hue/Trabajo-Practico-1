@@ -153,19 +153,18 @@
       "duration": 82.56,
       "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\5XqQsl5WHuLa1uLRxvWuaV.jpg",
       "source": "spotify_youtube"
+    },
+    {
+      "id": "80b2fdb8b55185a33dcffca0dfd91f48",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\boca-yo-te-amo-mc-caco-2oZGyWCAxsjH166841NdfX.mp3",
+      "title": "Boca yo te amo",
+      "artist": "Mc Caco",
+      "album": "Boca yo te amo",
+      "genre": "Desconocido",
+      "duration": 92.928,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\2oZGyWCAxsjH166841NdfX.jpg",
+      "source": "spotify_youtube"
     }
   ],
-  "playlists": {
-    "Favoritos": [
-      "0d30e2c649e1822a5ecf40bd04f5d154",
-      "44ac4a77a9b0b120a09fc87eb0150428"
-    ],
-    "koko": [
-      "0d30e2c649e1822a5ecf40bd04f5d154",
-      "7e14f7df3f8f3870179cc5f8d990d66e",
-      "bf70f904df9545105b40da98b5b4f56c",
-      "fe6d61001ac4b4baebcb1e68bac28773",
-      "c3f39edfe30b2dbb8827dbb72c13bfa2"
-    ]
-  }
+  "playlists": {}
 }
