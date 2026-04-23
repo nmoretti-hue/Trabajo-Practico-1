@@ -164,7 +164,31 @@
       "duration": 92.928,
       "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\2oZGyWCAxsjH166841NdfX.jpg",
       "source": "spotify_youtube"
+    },
+    {
+      "id": "1c1bb670a7013d5eff43d9284608f289",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\babydoll-ari-abdul-5rPNVwYjVEgkq6YNPki4Zc.mp3",
+      "title": "BABYDOLL",
+      "artist": "Ari Abdul",
+      "album": "BABYDOLL",
+      "genre": "Desconocido",
+      "duration": 196.296,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\portadas\\5rPNVwYjVEgkq6YNPki4Zc.jpg",
+      "source": "spotify_youtube"
+    },
+    {
+      "id": "2c7b0256bdd409f4e11b7bc62ffc3ff9",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\babydoll-dominic-fike-7yNf9YjeO5JXUE3JEBgnYc.mp3",
+      "title": "Babydoll",
+      "artist": "Dominic Fike",
+      "album": "Don't Forget About Me, Demos",
+      "genre": "Desconocido",
+      "duration": 99.576,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\portadas\\7yNf9YjeO5JXUE3JEBgnYc.jpg",
+      "source": "spotify_youtube"
     }
   ],
-  "playlists": {}
+  "playlists": {
+    "Favoritos": []
+  }
 }
