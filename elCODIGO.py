@@ -34,17 +34,17 @@ CACHE_COVERS_DIR.mkdir(parents=True, exist_ok=True)
 AUDIO_EXTENSIONS = {".mp3", ".wav", ".ogg", ".flac", ".m4a"}
 
 COLORS = {
-    "bg": "#d9d9dc",
-    "panel": "#070d1a",
-    "panel_alt": "#121a2b",
-    "line": "#2a3246",
-    "accent": "#ff8a24",
-    "accent_soft": "#f7a34f",
-    "text": "#f1f5f9",
-    "muted": "#9aa4b2",
-    "ok": "#22c55e",
-    "warn": "#ef4444",
-    "chip": "#222a3a",
+    "bg": "#FFF1F5",
+    "panel": "#FFFFFF",
+    "panel_alt": "#FFE4EC",
+    "line": "#E5E7EB",
+    "accent": "#5F374B",
+    "accent_soft": "#523143",
+    "text": "#1F2937",
+    "muted": "#6B7280",
+    "ok": "#10B981",
+    "warn": "#F59E0B",
+    "chip": "#F677C5",
 }
 
 FONT_MAIN = "Segoe UI"
@@ -73,7 +73,7 @@ def init_audio():
 
 class ProgressBar(tk.Canvas):
     def __init__(self, parent, on_seek=None):
-        super().__init__(parent, height=24, bg=COLORS["panel"], highlightthickness=0, bd=0)
+        super().__init__(parent, height=24, bg=COLORS["panel_alt"], highlightthickness=0, bd=0)
         self.on_seek = on_seek
         self.maximum = 100
         self.value = 0
@@ -172,9 +172,9 @@ class SpotifyDownloader:
 class Reproductor:
     def __init__(self, root):
         self.root = root
-        self.root.title("Reproductor de Musica - Tkinter")
-        self.root.geometry("1320x820")
-        self.root.minsize(1080, 680)
+        self.root.title("Reproductor de Musica - RhythmoTune")
+        self.root.geometry("1400x860")
+        self.root.minsize(1200, 720)
         self.root.configure(bg=COLORS["bg"])
 
         self.audio_ok = init_audio()
@@ -203,7 +203,7 @@ class Reproductor:
         self.spotify_result_map = {}
         self.spotify_auto_play_in_progress = False
         self.active_left_panel = None
-        self.main_cover_size = (280, 280)
+        self.main_cover_size = (56, 56)
 
         self._build_styles()
         self._build_ui()
@@ -231,7 +231,7 @@ class Reproductor:
             background=COLORS["panel_alt"],
             fieldbackground=COLORS["panel_alt"],
             foreground=COLORS["text"],
-            rowheight=54,
+            rowheight=46,
             bordercolor=COLORS["line"],
             lightcolor=COLORS["line"],
             darkcolor=COLORS["line"],
@@ -251,26 +251,20 @@ class Reproductor:
 
     def _build_ui(self):
         wrapper = tk.Frame(self.root, bg=COLORS["bg"])
-        wrapper.pack(fill="both", expand=True, padx=26, pady=22)
+        wrapper.pack(fill="both", expand=True)  # Sin padding
 
-        app = tk.Frame(wrapper, bg=COLORS["panel"], highlightthickness=1, highlightbackground=COLORS["line"])
+        app = tk.Frame(wrapper, bg=COLORS["panel"])  # Sin borde
         app.pack(fill="both", expand=True)
 
-        topbar = tk.Frame(app, bg=COLORS["panel"])
-        topbar.pack(fill="x", padx=12, pady=(10, 4))
-        tk.Label(topbar, text="  ", bg="#ff5f57", width=2).pack(side="left", padx=(0, 6))
-        tk.Label(topbar, text="  ", bg="#febc2e", width=2).pack(side="left", padx=(0, 6))
-        tk.Label(topbar, text="  ", bg="#28c840", width=2).pack(side="left")
-
         body = tk.Frame(app, bg=COLORS["panel"])
-        body.pack(fill="both", expand=True, padx=10, pady=(2, 10))
+        body.pack(fill="both", expand=True, padx=8, pady=(0, 8))
 
-        sidebar = tk.Frame(body, bg=COLORS["panel_alt"], width=280)
-        sidebar.pack(side="left", fill="y", padx=(14, 12), pady=14)
+        sidebar = tk.Frame(body, bg=COLORS["panel_alt"], width=260)
+        sidebar.pack(side="left", fill="y", padx=(10, 8), pady=10)
         sidebar.pack_propagate(False)
 
         content = tk.Frame(body, bg=COLORS["panel"])
-        content.pack(side="left", fill="both", expand=True, padx=(0, 14), pady=14)
+        content.pack(side="left", fill="both", expand=True, padx=(0, 10), pady=10)
 
         self._build_left(sidebar)
         self._build_center(content)
@@ -280,41 +274,54 @@ class Reproductor:
         parent.configure(highlightthickness=1, highlightbackground=COLORS["line"])
 
         brand = tk.Frame(parent, bg=COLORS["panel_alt"])
-        brand.pack(fill="x", padx=14, pady=(10, 10))
-        tk.Label(brand, text="RhythmoTune", font=(FONT_MAIN, 18, "bold"), bg=COLORS["panel_alt"], fg=COLORS["accent"]).pack(anchor="w")
+        brand.pack(fill="x", padx=12, pady=(10, 6))
+        tk.Label(
+            brand, text="RhythmoTune",
+            font=(FONT_MAIN, 16, "bold"),
+            bg=COLORS["panel_alt"], fg=COLORS["accent"]
+        ).pack(anchor="w")
+
+        tk.Frame(parent, bg=COLORS["line"], height=1).pack(fill="x", padx=12, pady=(0, 6))
 
         nav = tk.Frame(parent, bg=COLORS["panel_alt"])
-        nav.pack(fill="x", padx=14, pady=(0, 10))
+        nav.pack(fill="x", padx=12, pady=(0, 6))
         self.menu_spotify_btn = self._make_btn(nav, "Canciones", lambda: self._show_left_panel("songs"))
-        self.menu_spotify_btn.pack(fill="x", pady=(0, 6))
+        self.menu_spotify_btn.pack(fill="x", pady=(0, 4))
         self.menu_folder_btn = self._make_btn(nav, "Carpeta", lambda: self._show_left_panel("folder"))
-        self.menu_folder_btn.pack(fill="x", pady=(0, 6))
+        self.menu_folder_btn.pack(fill="x", pady=(0, 4))
         self.menu_playlist_btn = self._make_btn(nav, "Playlist", lambda: self._show_left_panel("playlist"))
         self.menu_playlist_btn.pack(fill="x")
 
+        tk.Frame(parent, bg=COLORS["line"], height=1).pack(fill="x", padx=12, pady=(6, 6))
+
         self.left_panel_container = tk.Frame(parent, bg=COLORS["panel_alt"])
-        self.left_panel_container.pack(fill="both", expand=True, padx=14, pady=(4, 8))
+        self.left_panel_container.pack(fill="both", expand=True, padx=12, pady=(0, 6))
         self.left_panel_container.pack_propagate(False)
 
+        # --- Panel Canciones ---
         self.songs_panel = tk.Frame(self.left_panel_container, bg=COLORS["panel_alt"])
-        self.folder_panel = tk.Frame(self.left_panel_container, bg=COLORS["panel_alt"])
-        self.playlist_panel = tk.Frame(self.left_panel_container, bg=COLORS["panel_alt"])
-
         tk.Label(
             self.songs_panel,
-            text="Modo Canciones\nUsa el buscador superior para buscar en Spotify.",
+            text="Modo Canciones\nUsá el buscador superior\npara buscar en Spotify.",
             font=(FONT_MAIN, 10),
             bg=COLORS["panel_alt"],
             fg=COLORS["muted"],
             justify="left",
         ).pack(anchor="w", pady=(6, 0))
 
-        self.import_btn = self._make_btn(self.folder_panel, "Agregar carpeta", self._import_folder, accent=True)
-        self.import_btn.pack(fill="x", pady=(0, 8))
-        tk.Label(self.folder_panel, text="Carpetas", font=(FONT_MAIN, 10, "bold"), bg=COLORS["panel_alt"], fg=COLORS["text"]).pack(anchor="w")
+        # --- Panel Carpeta ---
+        self.folder_panel = tk.Frame(self.left_panel_container, bg=COLORS["panel_alt"])
+        self.import_btn = self._make_btn(self.folder_panel, "+ Agregar carpeta", self._import_folder, accent=True)
+        self.import_btn.pack(fill="x", pady=(0, 6))
+
+        tk.Label(
+            self.folder_panel, text="Carpetas",
+            font=(FONT_MAIN, 10, "bold"),
+            bg=COLORS["panel_alt"], fg=COLORS["text"]
+        ).pack(anchor="w")
         self.folder_listbox = tk.Listbox(
             self.folder_panel,
-            height=5,
+            height=4,
             bg=COLORS["chip"],
             fg=COLORS["text"],
             selectbackground=COLORS["accent"],
@@ -322,19 +329,20 @@ class Reproductor:
             borderwidth=0,
             relief="flat",
             activestyle="none",
+            font=(FONT_MAIN, 9),
         )
-        self.folder_listbox.pack(fill="x", pady=(6, 10))
+        self.folder_listbox.pack(fill="x", pady=(4, 8))
         self.folder_listbox.bind("<<ListboxSelect>>", lambda _e: self._on_folder_selected())
 
-        row = tk.Frame(self.playlist_panel, bg=COLORS["panel_alt"])
-        row.pack(fill="x", pady=(0, 8))
-        self.new_playlist_btn = self._make_chip(row, "Crear playlist", self._create_playlist)
-        self.new_playlist_btn.pack(side="left", padx=(0, 6))
-        self.del_playlist_btn = self._make_chip(row, "Borrar", self._delete_playlist)
-        self.del_playlist_btn.pack(side="left")
-        self.playlist_listbox = tk.Listbox(
-            self.playlist_panel,
-            height=8,
+        tk.Frame(self.folder_panel, bg=COLORS["line"], height=1).pack(fill="x", pady=(0, 6))
+
+        tk.Label(
+            self.folder_panel, text="Canciones en carpeta",
+            font=(FONT_MAIN, 10, "bold"),
+            bg=COLORS["panel_alt"], fg=COLORS["text"]
+        ).pack(anchor="w")
+        self.folder_songs_listbox = tk.Listbox(
+            self.folder_panel,
             bg=COLORS["chip"],
             fg=COLORS["text"],
             selectbackground=COLORS["accent"],
@@ -342,24 +350,93 @@ class Reproductor:
             borderwidth=0,
             relief="flat",
             activestyle="none",
-        )
-        self.playlist_listbox.pack(fill="both", expand=True)
-        self.playlist_listbox.bind("<<ListboxSelect>>", lambda _e: self._on_playlist_selected())
-        tk.Label(
-            self.playlist_panel,
-            text="Selecciona playlist y luego una canción de Spotify para agregar.",
             font=(FONT_MAIN, 9),
-            bg=COLORS["panel_alt"],
-            fg=COLORS["muted"],
-        ).pack(anchor="w", pady=(8, 0))
+        )
+        self.folder_songs_listbox.pack(fill="both", expand=True, pady=(4, 0))
+        self.folder_songs_listbox.bind("<Double-1>", lambda _e: self._play_folder_song_selected())
+        self.folder_songs_listbox.bind("<<ListboxSelect>>", lambda _e: self._preview_folder_song_selected())
+        self._folder_songs_list = []
 
+        # --- Panel Playlist ---
+        self.playlist_panel = tk.Frame(self.left_panel_container, bg=COLORS["panel_alt"])
+        row = tk.Frame(self.playlist_panel, bg=COLORS["panel_alt"])
+        row.pack(fill="x", pady=(0, 6))
+        self.new_playlist_btn = self._make_chip(row, "Crear", self._create_playlist)
+        self.new_playlist_btn.pack(side="left", padx=(0, 4))
+        self.del_playlist_btn = self._make_chip(row, "Borrar", self._delete_playlist)
+        self.del_playlist_btn.pack(side="left")
+
+        tk.Label(
+            self.playlist_panel, text="Playlists",
+            font=(FONT_MAIN, 10, "bold"),
+            bg=COLORS["panel_alt"], fg=COLORS["text"]
+        ).pack(anchor="w")
+        self.playlist_listbox = tk.Listbox(
+            self.playlist_panel,
+            height=4,
+            bg=COLORS["chip"],
+            fg=COLORS["text"],
+            selectbackground=COLORS["accent"],
+            selectforeground="white",
+            borderwidth=0,
+            relief="flat",
+            activestyle="none",
+            font=(FONT_MAIN, 10),
+        )
+        self.playlist_listbox.pack(fill="x", pady=(4, 8))
+        self.playlist_listbox.bind("<<ListboxSelect>>", lambda _e: self._on_playlist_selected())
+
+        tk.Frame(self.playlist_panel, bg=COLORS["line"], height=1).pack(fill="x", pady=(0, 6))
+
+        tk.Label(
+            self.playlist_panel, text="Canciones en playlist",
+            font=(FONT_MAIN, 10, "bold"),
+            bg=COLORS["panel_alt"], fg=COLORS["text"]
+        ).pack(anchor="w")
+        self.playlist_songs_listbox = tk.Listbox(
+            self.playlist_panel,
+            bg=COLORS["chip"],
+            fg=COLORS["text"],
+            selectbackground=COLORS["accent"],
+            selectforeground="white",
+            borderwidth=0,
+            relief="flat",
+            activestyle="none",
+            font=(FONT_MAIN, 9),
+        )
+        self.playlist_songs_listbox.pack(fill="both", expand=True, pady=(4, 0))
+        self.playlist_songs_listbox.bind("<Double-1>", lambda _e: self._play_playlist_song_selected())
+        self.playlist_songs_listbox.bind("<<ListboxSelect>>", lambda _e: self._preview_playlist_song_selected())
+        self._playlist_songs_list = []
+
+        tk.Frame(parent, bg=COLORS["line"], height=1).pack(fill="x", padx=12, pady=(0, 6))
+
+        # Now playing card al fondo del sidebar
         self.now_card = tk.Frame(parent, bg=COLORS["chip"], highlightthickness=1, highlightbackground=COLORS["line"])
-        self.now_cover_label = tk.Label(self.now_card, bg=COLORS["chip"])
-        self.now_cover_label.pack(pady=(10, 6))
-        self.now_title_label = tk.Label(self.now_card, text="Sin cancion", font=(FONT_MAIN, 11, "bold"), bg=COLORS["chip"], fg=COLORS["text"], wraplength=220, justify="center")
-        self.now_title_label.pack(fill="x", padx=10)
-        self.now_artist_label = tk.Label(self.now_card, text="Selecciona una cancion", font=(FONT_MAIN, 9), bg=COLORS["chip"], fg=COLORS["muted"], wraplength=220, justify="center")
-        self.now_artist_label.pack(fill="x", padx=10, pady=(2, 10))
+        self.now_card.pack(fill="x", padx=12, pady=(0, 10))
+
+        inner = tk.Frame(self.now_card, bg=COLORS["chip"])
+        inner.pack(fill="x", padx=10, pady=8)
+
+        self.now_cover_label = tk.Label(inner, bg=COLORS["chip"])
+        self.now_cover_label.pack(side="left", padx=(0, 8))
+
+        text_side = tk.Frame(inner, bg=COLORS["chip"])
+        text_side.pack(side="left", fill="x", expand=True)
+        self.now_title_label = tk.Label(
+            text_side, text="Sin cancion",
+            font=(FONT_MAIN, 10, "bold"),
+            bg=COLORS["chip"], fg=COLORS["text"],
+            wraplength=160, justify="left", anchor="w"
+        )
+        self.now_title_label.pack(fill="x")
+        self.now_artist_label = tk.Label(
+            text_side, text="Seleccioná una cancion",
+            font=(FONT_MAIN, 9),
+            bg=COLORS["chip"], fg=COLORS["muted"],
+            wraplength=160, justify="left", anchor="w"
+        )
+        self.now_artist_label.pack(fill="x")
 
         self._set_now_card_placeholder()
 
@@ -376,96 +453,136 @@ class Reproductor:
         if panel_name == "songs":
             self.songs_panel.pack(fill="both", expand=True)
             self.menu_spotify_btn.config(bg=COLORS["accent"], fg="white")
-            self._set_spotify_popup_visible(True)
             self.local_results_frame.pack_forget()
             self.spotify_results_frame.pack(fill="both", expand=True)
-            self.mode_download_btn.pack_forget()
+            self._update_search_hint("Buscar en Spotify...")
         elif panel_name == "playlist":
             self.playlist_panel.pack(fill="both", expand=True)
             self.menu_playlist_btn.config(bg=COLORS["accent"], fg="white")
-            self._set_spotify_popup_visible(True)
-            self.spotify_results_frame.pack_forget()
-            self.local_results_frame.pack(fill="both", expand=True)
-            self.mode_download_btn.pack_forget()
-            self._apply_filter()
+            self.local_results_frame.pack_forget()
+            self.spotify_results_frame.pack(fill="both", expand=True)
+            self._update_search_hint("Buscar en Spotify para agregar a playlist...")
+            self._refresh_playlist_songs()
         else:
             self.folder_panel.pack(fill="both", expand=True)
             self.menu_folder_btn.config(bg=COLORS["accent"], fg="white")
-            self._set_spotify_popup_visible(True)
-            self.spotify_results_frame.pack_forget()
-            self.local_results_frame.pack(fill="both", expand=True)
-            self.mode_download_btn.pack(pady=(0, 8))
+            self.local_results_frame.pack_forget()
+            self.spotify_results_frame.pack(fill="both", expand=True)
+            self._update_search_hint("Buscar en Spotify para guardar en carpeta...")
             self._refresh_folder_lists()
-            self._apply_filter()
 
     def _build_center(self, parent):
-        # Barra superior centrada + preview a la derecha
+        # ── Barra superior: buscador compacto ────────────────────────────────
         top = tk.Frame(parent, bg=COLORS["panel"])
-        top.pack(fill="x", pady=(0, 10))
+        top.pack(fill="x", pady=(0, 6))
 
-        center_search = tk.Frame(top, bg=COLORS["panel"])
-        center_search.pack(side="left", fill="x", expand=True)
-        search_wrap = tk.Frame(center_search, bg=COLORS["chip"], width=540, height=66, highlightthickness=1, highlightbackground=COLORS["line"])
-        search_wrap.pack(pady=2)
-        search_wrap.pack_propagate(False)
-        self.spotify_entry = tk.Entry(
-            search_wrap, bg=COLORS["chip"], fg=COLORS["text"], insertbackground=COLORS["text"], relief="flat", bd=0, font=(FONT_MAIN, 14)
+        search_wrap = tk.Frame(
+            top, bg=COLORS["chip"],
+            highlightthickness=1, highlightbackground=COLORS["line"]
         )
-        self.spotify_entry.pack(side="left", fill="x", expand=True, padx=(14, 8), ipady=10)
+        search_wrap.pack(side="left", fill="x", expand=True, ipady=0)
+
+        self.spotify_entry = tk.Entry(
+            search_wrap,
+            bg=COLORS["chip"], fg=COLORS["text"],
+            insertbackground=COLORS["text"],
+            relief="flat", bd=0,
+            font=(FONT_MAIN, 11)
+        )
+        self.spotify_entry.pack(side="left", fill="x", expand=True, padx=(10, 4), ipady=6)
         self.spotify_entry.bind("<Return>", lambda _e: self._search_spotify())
+
         self.spotify_btn = self._make_chip(search_wrap, "Buscar", self._search_spotify)
-        self.spotify_btn.pack(side="right", padx=10, pady=10)
+        self.spotify_btn.pack(side="right", padx=6, pady=4)
 
-        preview_top = tk.Frame(top, bg=COLORS["panel_alt"], highlightthickness=1, highlightbackground=COLORS["line"], width=310, height=82)
-        preview_top.pack(side="right", padx=(10, 0))
-        preview_top.pack_propagate(False)
-        self.top_preview_image = tk.Label(preview_top, bg=COLORS["panel_alt"])
-        self.top_preview_image.pack(side="left", padx=10, pady=8)
-        # Compatibilidad con funciones existentes que actualizan cover_label
-        self.cover_label = self.top_preview_image
-        text_wrap = tk.Frame(preview_top, bg=COLORS["panel_alt"])
-        text_wrap.pack(side="left", fill="both", expand=True, padx=(0, 8), pady=8)
-        self.top_preview_title = tk.Label(text_wrap, text="Sin cancion", font=(FONT_MAIN, 11, "bold"), bg=COLORS["panel_alt"], fg=COLORS["text"], anchor="w")
-        self.top_preview_title.pack(fill="x")
-        self.top_preview_artist = tk.Label(text_wrap, text="?", font=(FONT_MAIN, 9), bg=COLORS["panel_alt"], fg=COLORS["muted"], anchor="w")
-        self.top_preview_artist.pack(fill="x", pady=(2, 0))
-
-        # Lista principal (segun modo)
-        self.results_container = tk.Frame(parent, bg=COLORS["panel_alt"], highlightthickness=1, highlightbackground=COLORS["line"])
-        self.results_container.pack(fill="both", expand=True, pady=(0, 10))
+        # ── Contenedor principal: tabla izq + panel detalle der ───────────────
+        self.results_container = tk.Frame(
+            parent, bg=COLORS["panel_alt"],
+            highlightthickness=1, highlightbackground=COLORS["line"]
+        )
+        self.results_container.pack(fill="both", expand=True, pady=(0, 8))
 
         self.spotify_results_frame = tk.Frame(self.results_container, bg=COLORS["panel_alt"])
         self.local_results_frame = tk.Frame(self.results_container, bg=COLORS["panel_alt"])
 
-        spotify_results_wrap = tk.Frame(self.spotify_results_frame, bg=COLORS["panel_alt"])
-        spotify_results_wrap.pack(fill="both", expand=True, padx=10, pady=10)
-        self.spotify_tree = ttk.Treeview(spotify_results_wrap, columns=("artist", "album"), show="tree headings", height=9)
+        # ── Panel de detalle DERECHO (portada grande 220x220 + titulo) ────────
+        # Se empaqueta primero a la derecha para que la tabla llene el resto
+        detail_panel = tk.Frame(
+            self.spotify_results_frame, bg=COLORS["panel"],
+            highlightthickness=1, highlightbackground=COLORS["line"],
+            width=300
+        )
+        detail_panel.pack(side="right", fill="y", padx=(4, 8), pady=8)
+        detail_panel.pack_propagate(False)
+
+        cover_outer = tk.Frame(detail_panel, bg=COLORS["panel"])
+        cover_outer.pack(fill="x", padx=16, pady=(24, 10))
+
+        self.top_preview_image = tk.Label(cover_outer, bg=COLORS["panel"])
+        self.top_preview_image.pack(anchor="center")
+        self.cover_label = self.top_preview_image  # alias
+
+        # Línea decorativa naranja
+        tk.Frame(detail_panel, bg=COLORS["accent"], height=2).pack(fill="x", padx=16, pady=(0, 12))
+
+        # Título grande
+        self.top_preview_title = tk.Label(
+            detail_panel, text="Sin cancion",
+            font=(FONT_MAIN, 13, "bold"),
+            bg=COLORS["panel"], fg=COLORS["text"],
+            anchor="center", justify="center",
+            wraplength=268
+        )
+        self.top_preview_title.pack(fill="x", padx=16)
+        self.track_title_label = self.top_preview_title  # alias
+
+        # Artista
+        self.top_preview_artist = tk.Label(
+            detail_panel, text="—",
+            font=(FONT_MAIN, 10),
+            bg=COLORS["panel"], fg=COLORS["accent_soft"],
+            anchor="center", justify="center",
+            wraplength=268
+        )
+        self.top_preview_artist.pack(fill="x", padx=16, pady=(4, 0))
+        self.track_artist_label = self.top_preview_artist  # alias
+
+        # ── Tabla Spotify (izquierda, ocupa el espacio restante) ──────────────
+        spotify_left = tk.Frame(self.spotify_results_frame, bg=COLORS["panel_alt"])
+        spotify_left.pack(side="left", fill="both", expand=True, padx=(8, 4), pady=8)
+
+        self.spotify_tree = ttk.Treeview(
+            spotify_left, columns=("artist",),
+            show="tree headings", height=10
+        )
         self.spotify_tree.heading("#0", text="Cancion")
         self.spotify_tree.heading("artist", text="Artista")
-        self.spotify_tree.heading("album", text="Album")
-        self.spotify_tree.column("#0", width=360)
-        self.spotify_tree.column("artist", width=220)
-        self.spotify_tree.column("album", width=220)
+        self.spotify_tree.column("#0", width=230, minwidth=140)
+        self.spotify_tree.column("artist", width=150, minwidth=80)
         self.spotify_tree.pack(side="left", fill="both", expand=True)
         self.spotify_tree.bind("<<TreeviewSelect>>", lambda _e: self._on_spotify_tree_selected())
-        sp_scroll = ttk.Scrollbar(spotify_results_wrap, orient="vertical", command=self.spotify_tree.yview)
+        sp_scroll = ttk.Scrollbar(spotify_left, orient="vertical", command=self.spotify_tree.yview)
         sp_scroll.pack(side="right", fill="y")
         self.spotify_tree.configure(yscrollcommand=sp_scroll.set)
 
+        # Placeholder inicial de portada grande
+        self._set_big_cover_placeholder()
+
+        # ── Tabla local (oculta por defecto) ─────────────────────────────────
         local_wrap = tk.Frame(self.local_results_frame, bg=COLORS["panel_alt"])
-        local_wrap.pack(fill="both", expand=True, padx=10, pady=10)
+        local_wrap.pack(fill="both", expand=True, padx=8, pady=8)
         cols = ("artist", "album", "genre", "duration")
-        self.tree = ttk.Treeview(local_wrap, columns=cols, show="tree headings", height=9)
+        self.tree = ttk.Treeview(local_wrap, columns=cols, show="tree headings", height=10)
         self.tree.heading("#0", text="Cancion")
         self.tree.heading("artist", text="Artista")
         self.tree.heading("album", text="Album")
         self.tree.heading("genre", text="Genero")
-        self.tree.heading("duration", text="Duracion")
-        self.tree.column("#0", width=340)
-        self.tree.column("artist", width=180)
-        self.tree.column("album", width=190)
-        self.tree.column("genre", width=120)
-        self.tree.column("duration", width=90, anchor="center")
+        self.tree.heading("duration", text="Dur.")
+        self.tree.column("#0", width=340, minwidth=160)
+        self.tree.column("artist", width=190, minwidth=80)
+        self.tree.column("album", width=190, minwidth=80)
+        self.tree.column("genre", width=110, minwidth=60)
+        self.tree.column("duration", width=70, anchor="center", minwidth=50)
         self.tree.pack(side="left", fill="both", expand=True)
         self.tree.bind("<Double-1>", lambda _e: self._play_selected_track())
         self.tree.bind("<<TreeviewSelect>>", lambda _e: self._preview_selected_library())
@@ -473,77 +590,125 @@ class Reproductor:
         ybar.pack(side="right", fill="y")
         self.tree.configure(yscrollcommand=ybar.set)
 
-        self.mode_download_btn = self._make_btn(self.local_results_frame, "Descargar", self._download_current_to_folder, accent=True)
-
-        # Compat con filtros existentes
+        # Widgets ocultos para compatibilidad con filtros
         self.search_entry = tk.Entry(parent)
         self.search_field_var = tk.StringVar(value="Cancion")
-        self.search_field_combo = ttk.Combobox(parent, textvariable=self.search_field_var, state="readonly", values=["Cancion", "Artista", "Album", "Genero", "Playlist"])
+        self.search_field_combo = ttk.Combobox(
+            parent, textvariable=self.search_field_var, state="readonly",
+            values=["Cancion", "Artista", "Album", "Genero", "Playlist"]
+        )
         self.sort_var = tk.StringVar(value="Cancion")
-        self.sort_combo = ttk.Combobox(parent, textvariable=self.sort_var, state="readonly", values=["Cancion", "Artista", "Album", "Genero", "Duracion"])
+        self.sort_combo = ttk.Combobox(
+            parent, textvariable=self.sort_var, state="readonly",
+            values=["Cancion", "Artista", "Album", "Genero", "Duracion"]
+        )
 
-        # Controles inferiores centrados
-        bottom = tk.Frame(parent, bg=COLORS["panel_alt"], highlightthickness=1, highlightbackground=COLORS["line"])
+        # ── Barra de controles inferior ───────────────────────────────────────
+        bottom = tk.Frame(
+            parent, bg=COLORS["panel_alt"],
+            highlightthickness=1, highlightbackground=COLORS["line"]
+        )
         bottom.pack(fill="x")
 
-        vol_wrap = tk.Frame(bottom, bg=COLORS["panel_alt"], width=90)
-        vol_wrap.pack(side="left", fill="y", padx=12, pady=8)
-        tk.Label(vol_wrap, text="Vol", font=(FONT_MAIN, 10, "bold"), bg=COLORS["panel_alt"], fg=COLORS["text"]).pack()
+        # Volumen (izquierda)
+        vol_wrap = tk.Frame(bottom, bg=COLORS["panel_alt"], width=70)
+        vol_wrap.pack(side="left", fill="y", padx=(10, 6), pady=8)
+        vol_wrap.pack_propagate(False)
+        tk.Label(
+            vol_wrap, text="Vol",
+            font=(FONT_MAIN, 9, "bold"),
+            bg=COLORS["panel_alt"], fg=COLORS["text"]
+        ).pack()
         self.volume_scale = tk.Scale(
             vol_wrap,
-            from_=0,
-            to=100,
+            from_=0, to=100,
             orient="vertical",
             command=self._set_volume,
             showvalue=False,
-            bg=COLORS["panel_alt"],
-            fg=COLORS["text"],
+            bg=COLORS["panel_alt"], fg=COLORS["text"],
             troughcolor=COLORS["line"],
             activebackground=COLORS["accent"],
-            relief="flat",
-            highlightthickness=0,
-            length=120,
-            width=10,
+            relief="flat", highlightthickness=0,
+            length=100, width=10,
         )
         self.volume_scale.set(70)
         self.volume_scale.pack()
 
+        # Centro: estado + barra + botones
         center_controls = tk.Frame(bottom, bg=COLORS["panel_alt"])
-        center_controls.pack(side="left", fill="x", expand=True, padx=8, pady=8)
-        self.status_label = tk.Label(center_controls, text="Listo", font=(FONT_MAIN, 10, "bold"), bg=COLORS["panel_alt"], fg=COLORS["accent_soft"])
+        center_controls.pack(side="left", fill="both", expand=True, padx=8, pady=8)
+
+        self.status_label = tk.Label(
+            center_controls, text="Listo",
+            font=(FONT_MAIN, 10, "bold"),
+            bg=COLORS["panel_alt"], fg=COLORS["accent_soft"]
+        )
         self.status_label.pack(anchor="center")
 
         self.progress = ProgressBar(center_controls, on_seek=self._seek_audio)
-        self.progress.configure(bg=COLORS["panel_alt"], height=26)
-        self.progress.pack(fill="x", padx=120, pady=(2, 2))
+        self.progress.configure(bg=COLORS["panel_alt"], height=24)
+        self.progress.pack(fill="x", padx=80, pady=(2, 2))
 
         times = tk.Frame(center_controls, bg=COLORS["panel_alt"])
-        times.pack(fill="x", padx=120)
-        self.current_time_label = tk.Label(times, text="00:00", font=("Consolas", 10), bg=COLORS["panel_alt"], fg=COLORS["text"])
+        times.pack(fill="x", padx=80)
+        self.current_time_label = tk.Label(
+            times, text="00:00",
+            font=("Consolas", 10),
+            bg=COLORS["panel_alt"], fg=COLORS["text"]
+        )
         self.current_time_label.pack(side="left")
-        self.total_time_label = tk.Label(times, text="00:00", font=("Consolas", 10), bg=COLORS["panel_alt"], fg=COLORS["muted"])
+        self.total_time_label = tk.Label(
+            times, text="00:00",
+            font=("Consolas", 10),
+            bg=COLORS["panel_alt"], fg=COLORS["muted"]
+        )
         self.total_time_label.pack(side="right")
 
+        # Fila de botones de control
         controls_row = tk.Frame(center_controls, bg=COLORS["panel_alt"])
-        controls_row.pack(pady=(8, 0))
-        self.prev_btn = self._make_btn(controls_row, "Anterior", self._prev_song)
-        self.prev_btn.pack(side="left", padx=4)
-        self.stop_btn = self._make_btn(controls_row, "Stop", self._stop_song)
-        self.stop_btn.pack(side="left", padx=4)
-        self.play_btn = self._make_btn(controls_row, "Play", self._toggle_play, accent=True)
-        self.play_btn.pack(side="left", padx=8)
-        self.next_btn = self._make_btn(controls_row, "Siguiente", self._next_song)
-        self.next_btn.pack(side="left", padx=4)
+        controls_row.pack(pady=(6, 0))
+
+        self.prev_btn = self._make_btn(controls_row, "◀◀", self._prev_song)
+        self.prev_btn.pack(side="left", padx=3)
+        self.stop_btn = self._make_btn(controls_row, "■ Stop", self._stop_song)
+        self.stop_btn.pack(side="left", padx=3)
+        self.play_btn = self._make_btn(controls_row, "▶ Play", self._toggle_play, accent=True)
+        self.play_btn.pack(side="left", padx=6)
+        self.next_btn = self._make_btn(controls_row, "▶▶", self._next_song)
+        self.next_btn.pack(side="left", padx=3)
+
+        tk.Frame(controls_row, bg=COLORS["panel_alt"], width=12).pack(side="left")
+
         self.shuffle_btn = self._make_btn(controls_row, "Shuffle", self._toggle_shuffle)
-        self.shuffle_btn.pack(side="left", padx=4)
+        self.shuffle_btn.pack(side="left", padx=3)
         self.loop_btn = self._make_btn(controls_row, "Loop", self._toggle_loop)
-        self.loop_btn.pack(side="left", padx=4)
-        self.add_to_playlist_btn = self._make_btn(controls_row, "Agregar", self._add_selected_to_playlist)
-        self.add_to_playlist_btn.pack(side="left", padx=4)
+        self.loop_btn.pack(side="left", padx=3)
+
+        tk.Frame(controls_row, bg=COLORS["panel_alt"], width=12).pack(side="left")
+
+        self.add_to_playlist_btn = self._make_btn(controls_row, "+ Playlist", self._add_selected_to_playlist)
+        self.add_to_playlist_btn.pack(side="left", padx=3)
 
         self.pause_btn = self.play_btn
 
-        self._set_cover_placeholder("?")
+    # ── Helpers de portada ────────────────────────────────────────────────────
+
+    def _set_big_cover_placeholder(self):
+        """Placeholder para la portada grande del panel de detalle (220x220)."""
+        size = 220
+        image = Image.new("RGB", (size, size), COLORS["panel"])
+        draw = ImageDraw.Draw(image)
+        draw.rounded_rectangle((0, 0, size - 1, size - 1), radius=18, fill=COLORS["panel_alt"])
+        draw.ellipse((size // 2 - 40, size // 2 - 40, size // 2 + 40, size // 2 + 40), fill=COLORS["accent"])
+        photo = ImageTk.PhotoImage(image)
+        self.top_preview_image.config(image=photo)
+        self.top_preview_image.image = photo
+        self.top_preview_title.config(text="Sin cancion")
+        self.top_preview_artist.config(text="—")
+
+    def _set_cover_placeholder(self, text=""):
+        """Alias mantenido para compatibilidad — llama al placeholder grande."""
+        self._set_big_cover_placeholder()
 
     def _make_btn(self, parent, text, command, accent=False):
         return tk.Button(
@@ -559,8 +724,8 @@ class Reproductor:
             borderwidth=1,
             highlightthickness=1,
             highlightbackground=COLORS["line"],
-            padx=12,
-            pady=9,
+            padx=10,
+            pady=7,
             cursor="hand2",
         )
 
@@ -577,71 +742,81 @@ class Reproductor:
             relief="flat",
             borderwidth=0,
             padx=10,
-            pady=6,
+            pady=5,
             cursor="hand2",
         )
 
     def _set_status(self, text, color=None):
         self.status_label.config(text=text, fg=color or COLORS["accent_soft"])
 
-    def _set_cover_placeholder(self, text):
-        size = self.main_cover_size[0]
-        image = Image.new("RGB", (size, size), COLORS["panel_alt"])
-        draw = ImageDraw.Draw(image)
-        draw.rounded_rectangle((0, 0, size - 1, size - 1), radius=24, fill=COLORS["panel_alt"])
-        draw.ellipse((size // 2 - 44, size // 2 - 54, size // 2 + 44, size // 2 + 34), fill=COLORS["accent"])
-        draw.text((size // 2 - 46, size - 34), text[:12], fill=COLORS["text"])
-        photo = ImageTk.PhotoImage(image)
-        self.cover_label.config(image=photo)
-        self.cover_label.image = photo
-        small = Image.new("RGB", (52, 52), COLORS["chip"])
-        d2 = ImageDraw.Draw(small)
-        d2.ellipse((10, 10, 42, 42), fill=COLORS["accent"])
-        sp = ImageTk.PhotoImage(small)
-        self.top_preview_image.config(image=sp)
-        self.top_preview_image.image = sp
-        self.top_preview_title.config(text="Sin cancion")
-        self.top_preview_artist.config(text="?")
-
     def _set_now_card_placeholder(self):
-        image = Image.new("RGB", (96, 96), COLORS["panel"])
+        image = Image.new("RGB", (44, 44), COLORS["chip"])
         draw = ImageDraw.Draw(image)
-        draw.rounded_rectangle((0, 0, 95, 95), radius=14, fill=COLORS["panel"])
-        draw.ellipse((26, 20, 70, 64), fill=COLORS["accent"])
+        draw.rounded_rectangle((0, 0, 43, 43), radius=8, fill=COLORS["chip"])
+        draw.ellipse((10, 10, 34, 34), fill=COLORS["accent"])
         photo = ImageTk.PhotoImage(image)
         self.now_cover_label.config(image=photo)
         self.now_cover_label.image = photo
         self.now_title_label.config(text="Sin cancion")
-        self.now_artist_label.config(text="Selecciona una cancion")
+        self.now_artist_label.config(text="Seleccioná una cancion")
 
     def _set_now_card_track(self, title, artist, cover_source=""):
         self.now_title_label.config(text=title or "Sin cancion")
         self.now_artist_label.config(text=artist or "Desconocido")
         if cover_source:
             try:
-                img = self._load_image(cover_source, (96, 96))
+                img = self._load_image(cover_source, (44, 44))
                 self.now_cover_label.config(image=img)
                 self.now_cover_label.image = img
                 return
             except Exception:
                 pass
-        image = Image.new("RGB", (96, 96), COLORS["panel"])
-        draw = ImageDraw.Draw(image)
-        draw.rounded_rectangle((0, 0, 95, 95), radius=14, fill=COLORS["panel"])
-        draw.ellipse((26, 20, 70, 64), fill=COLORS["accent"])
-        photo = ImageTk.PhotoImage(image)
-        self.now_cover_label.config(image=photo)
-        self.now_cover_label.image = photo
+        self._set_now_card_placeholder()
 
     def _set_spotify_popup_visible(self, visible):
-        if hasattr(self, "spotify_popup_holder"):
-            self.spotify_popup_holder.configure(height=230 if visible else 0)
-            return
-        # Compatibilidad: en layouts nuevos sin spotify_popup_holder
         if hasattr(self, "spotify_entry"):
             self.spotify_entry.configure(state="normal" if visible else "disabled")
         if hasattr(self, "spotify_btn"):
             self.spotify_btn.configure(state="normal" if visible else "disabled")
+
+    def _update_search_hint(self, hint):
+        current = self.spotify_entry.get()
+        if not current or current in (
+            "Buscar en Spotify...",
+            "Buscar en Spotify para agregar a playlist...",
+            "Buscar en Spotify para guardar en carpeta...",
+        ):
+            self.spotify_entry.delete(0, "end")
+            self.spotify_entry.config(fg=COLORS["muted"])
+            self.spotify_entry.insert(0, hint)
+
+        def _on_focus_in(e):
+            val = self.spotify_entry.get()
+            if val in (
+                "Buscar en Spotify...",
+                "Buscar en Spotify para agregar a playlist...",
+                "Buscar en Spotify para guardar en carpeta...",
+            ):
+                self.spotify_entry.delete(0, "end")
+                self.spotify_entry.config(fg=COLORS["text"])
+
+        def _on_focus_out(e):
+            if not self.spotify_entry.get().strip():
+                self.spotify_entry.config(fg=COLORS["muted"])
+                self.spotify_entry.insert(0, hint)
+
+        self.spotify_entry.bind("<FocusIn>", _on_focus_in)
+        self.spotify_entry.bind("<FocusOut>", _on_focus_out)
+
+    def _get_real_search_query(self):
+        val = self.spotify_entry.get().strip()
+        if val in (
+            "Buscar en Spotify...",
+            "Buscar en Spotify para agregar a playlist...",
+            "Buscar en Spotify para guardar en carpeta...",
+        ):
+            return ""
+        return val
 
     def _refresh_folder_lists(self):
         if not hasattr(self, "folder_listbox"):
@@ -665,41 +840,36 @@ class Reproductor:
         if not hasattr(self, "folder_listbox"):
             return
         sel = self.folder_listbox.curselection()
+        self._folder_songs_list = []
+        self.folder_songs_listbox.delete(0, "end")
         if not sel:
             return
-        self._apply_filter()
+        folder = self.folder_listbox.get(sel[0])
+        tracks = [
+            t for t in self.library.values()
+            if str(Path(t.get("path", "")).parent) == folder
+        ]
+        tracks.sort(key=lambda t: t.get("title", "").lower())
+        self._folder_songs_list = tracks
+        for t in tracks:
+            dur = self._format_time(t.get("duration", 0))
+            self.folder_songs_listbox.insert("end", f"{t.get('title', '?')}  [{dur}]")
 
-    def _play_selected_folder_song(self):
-        pass
-
-    def _download_current_to_folder(self):
-        if self.active_left_panel != "folder":
-            return
-        if not self.current_audio_path or not Path(self.current_audio_path).exists():
-            messagebox.showinfo("Descargar", "No hay cancion reproduciendose para descargar.")
-            return
-        sel = self.folder_listbox.curselection()
+    def _play_folder_song_selected(self):
+        sel = self.folder_songs_listbox.curselection()
         if not sel:
-            messagebox.showinfo("Descargar", "Selecciona una carpeta destino.")
             return
-        target_folder = Path(self.folder_listbox.get(sel[0]))
-        if not target_folder.exists():
-            messagebox.showerror("Descargar", "La carpeta seleccionada no existe.")
-            return
-        src = Path(self.current_audio_path)
-        target = target_folder / src.name
-        try:
-            if src.resolve() == target.resolve():
-                self._set_status("La cancion ya esta en esta carpeta.", COLORS["muted"])
-                return
-        except Exception:
-            pass
-        shutil.copy2(src, target)
-        self._set_status(f"Cancion descargada en {target_folder}", COLORS["ok"])
+        track = self._folder_songs_list[sel[0]]
+        self.view_tracks = self._folder_songs_list
+        self.current_playlist_name = ""
+        self._play_track(track)
 
-    def _clear_search_placeholder(self):
-        if self.spotify_entry.get().strip().lower() == "search for a song":
-            self.spotify_entry.delete(0, "end")
+    def _preview_folder_song_selected(self):
+        sel = self.folder_songs_listbox.curselection()
+        if not sel:
+            return
+        track = self._folder_songs_list[sel[0]]
+        self._show_track_info(track)
 
     def _load_image(self, source, size):
         key = f"{source}|{size}"
@@ -737,7 +907,6 @@ class Reproductor:
                         self.playlists["Favoritos"].append(track["id"])
                 self._save_data()
                 return
-
             self.library = {t["id"]: t for t in data.get("library", []) if isinstance(t, dict) and t.get("id")}
             self.playlists = data.get("playlists", {}) if isinstance(data.get("playlists", {}), dict) else {}
             if not self.playlists:
@@ -838,6 +1007,7 @@ class Reproductor:
             idx = sorted(self.playlists.keys(), key=str.lower).index(current)
             self.playlist_listbox.selection_clear(0, "end")
             self.playlist_listbox.selection_set(idx)
+        self._refresh_playlist_songs()
 
     def _get_selected_playlist_name(self):
         selection = self.playlist_listbox.curselection()
@@ -847,9 +1017,39 @@ class Reproductor:
 
     def _on_playlist_selected(self):
         self.current_playlist_name = self._get_selected_playlist_name()
-        self._apply_filter()
+        self._refresh_playlist_songs()
         if self.current_playlist_name:
-            self._set_status(f"Mostrando playlist: {self.current_playlist_name}", COLORS["ok"])
+            self._set_status(f"Playlist: {self.current_playlist_name}", COLORS["ok"])
+
+    def _refresh_playlist_songs(self):
+        if not hasattr(self, "playlist_songs_listbox"):
+            return
+        self._playlist_songs_list = []
+        self.playlist_songs_listbox.delete(0, "end")
+        name = self._get_selected_playlist_name()
+        if not name or name not in self.playlists:
+            return
+        ids = self.playlists[name]
+        tracks = [self.library[tid] for tid in ids if tid in self.library]
+        self._playlist_songs_list = tracks
+        for t in tracks:
+            dur = self._format_time(t.get("duration", 0))
+            self.playlist_songs_listbox.insert("end", f"{t.get('title', '?')}  [{dur}]")
+
+    def _play_playlist_song_selected(self):
+        sel = self.playlist_songs_listbox.curselection()
+        if not sel:
+            return
+        track = self._playlist_songs_list[sel[0]]
+        self.view_tracks = self._playlist_songs_list
+        self._play_track(track)
+
+    def _preview_playlist_song_selected(self):
+        sel = self.playlist_songs_listbox.curselection()
+        if not sel:
+            return
+        track = self._playlist_songs_list[sel[0]]
+        self._show_track_info(track)
 
     def _create_playlist(self):
         name = simpledialog.askstring("Nueva playlist", "Nombre de la playlist:")
@@ -888,7 +1088,10 @@ class Reproductor:
         if not options:
             messagebox.showinfo("Playlist", "Crea una playlist primero.")
             return
-        name = simpledialog.askstring("Agregar a playlist", f"Playlists disponibles: {', '.join(options)}\nEscribe el nombre exacto:")
+        name = simpledialog.askstring(
+            "Agregar a playlist",
+            f"Playlists disponibles: {', '.join(options)}\nEscribí el nombre exacto:"
+        )
         if not name:
             return
         name = name.strip()
@@ -983,8 +1186,7 @@ class Reproductor:
                     except Exception:
                         image = ""
             self.tree.insert(
-                "",
-                "end",
+                "", "end",
                 iid=track["id"],
                 text=track.get("title", ""),
                 image=image,
@@ -1017,23 +1219,22 @@ class Reproductor:
         artist = track.get("artist", "Desconocido")
         album = track.get("album", "Desconocido")
         cover_source = track.get("cover_path", "")
+
         self.track_title_label.config(text=title)
         self.track_artist_label.config(text=f"{artist}  |  {album}")
         self._set_now_card_track(title, artist, cover_source)
         self.top_preview_title.config(text=title)
-        self.top_preview_artist.config(text=artist)
+        self.top_preview_artist.config(text=f"{artist}  |  {album}")
+
         if cover_source:
             try:
-                img_big = self._load_image(cover_source, self.main_cover_size)
-                self.cover_label.config(image=img_big)
-                self.cover_label.image = img_big
-                img_small = self._load_image(cover_source, (52, 52))
-                self.top_preview_image.config(image=img_small)
-                self.top_preview_image.image = img_small
+                img = self._load_image(cover_source, (220, 220))
+                self.cover_label.config(image=img)
+                self.cover_label.image = img
             except Exception:
-                self._set_cover_placeholder("Sin portada")
+                self._set_big_cover_placeholder()
         else:
-            self._set_cover_placeholder("Sin portada")
+            self._set_big_cover_placeholder()
 
     def _play_selected_track(self):
         track = self._get_selected_track_from_tree()
@@ -1074,7 +1275,7 @@ class Reproductor:
         self.total_time_label.config(text=self._format_time(self.current_duration))
         self._show_track_info(track)
         self._set_status(f"Reproduciendo: {track.get('title', '')}", COLORS["ok"])
-        self.play_btn.config(text="Pausa")
+        self.play_btn.config(text="⏸ Pausa")
 
     def _toggle_play(self):
         if self.is_playing and not self.is_paused:
@@ -1098,13 +1299,13 @@ class Reproductor:
             self._play_started_at = time.time()
             self.is_paused = False
             self._set_status("Reproduccion reanudada.", COLORS["ok"])
-            self.play_btn.config(text="Pausa")
+            self.play_btn.config(text="⏸ Pausa")
         else:
             self._paused_elapsed += time.time() - self._play_started_at
             pygame.mixer.music.pause()
             self.is_paused = True
             self._set_status("Reproduccion pausada.")
-            self.play_btn.config(text="Play")
+            self.play_btn.config(text="▶ Play")
 
     def _stop_song(self):
         if self.audio_ok:
@@ -1114,7 +1315,7 @@ class Reproductor:
         self._paused_elapsed = 0.0
         self.progress.set(0)
         self.current_time_label.config(text="00:00")
-        self.play_btn.config(text="Play")
+        self.play_btn.config(text="▶ Play")
         self._set_status("Reproduccion detenida.")
 
     def _toggle_shuffle(self):
@@ -1164,7 +1365,7 @@ class Reproductor:
         self._paused_elapsed = target
         self._play_started_at = time.time()
         self.is_paused = False
-        self.play_btn.config(text="Pausa")
+        self.play_btn.config(text="⏸ Pausa")
 
     def _current_seconds(self):
         if not self.is_playing:
@@ -1193,34 +1394,14 @@ class Reproductor:
         self.root.after(500, self._check_end)
 
     def _search_spotify(self):
-        query = self.spotify_entry.get().strip()
-        if self.active_left_panel == "folder":
-            self._apply_filter_folder_query(query)
-            return
+        query = self._get_real_search_query()
         if not query:
-            messagebox.showwarning("Spotify", "Escribe una busqueda para Spotify.")
+            messagebox.showwarning("Spotify", "Escribí algo para buscar en Spotify.")
             return
         self.last_spotify_query = query
         self.spotify_btn.config(state="disabled")
         self._set_status("Buscando en Spotify...", COLORS["accent_soft"])
         threading.Thread(target=self._spotify_search_worker, args=(query,), daemon=True).start()
-
-    def _apply_filter_folder_query(self, query):
-        if self.active_left_panel != "folder":
-            return
-        selected = self.folder_listbox.curselection() if hasattr(self, "folder_listbox") else ()
-        if not selected:
-            self.view_tracks = []
-            self._render_library_table()
-            return
-        folder = self.folder_listbox.get(selected[0])
-        tracks = [t for t in self.library.values() if str(Path(t.get("path", "")).parent) == folder]
-        q = query.strip().lower()
-        if q:
-            tracks = [t for t in tracks if q in t.get("title", "").lower() or q in t.get("artist", "").lower()]
-        tracks.sort(key=lambda t: t.get("title", "").lower())
-        self.view_tracks = tracks
-        self._render_library_table()
 
     def _refresh_spotify(self):
         if not self.last_spotify_query:
@@ -1248,14 +1429,12 @@ class Reproductor:
                 image = self._load_image("", (36, 36))
 
             self.spotify_tree.insert(
-                "",
-                "end",
+                "", "end",
                 iid=iid,
                 text=track.get("title", "Desconocido"),
                 image=image,
                 values=(
                     track.get("artist", "Desconocido"),
-                    track.get("album", "Desconocido"),
                 ),
             )
             self.spotify_result_map[iid] = track
@@ -1274,13 +1453,39 @@ class Reproductor:
         if self.spotify_auto_play_in_progress:
             return
         self.spotify_auto_play_in_progress = True
+
         if self.active_left_panel == "playlist":
             target_playlist = self._get_selected_playlist_name()
-            self._set_status("Descargando para agregar a playlist...", COLORS["accent_soft"])
-            threading.Thread(target=self._spotify_download_worker, args=(track, False, target_playlist), daemon=True).start()
+            if target_playlist:
+                self._set_status(f"Descargando y agregando a '{target_playlist}'...", COLORS["accent_soft"])
+                threading.Thread(
+                    target=self._spotify_download_worker, args=(track, True, target_playlist, ""), daemon=True
+                ).start()
+            else:
+                self._set_status("Sin playlist seleccionada — reproduciendo sin guardar...", COLORS["accent_soft"])
+                threading.Thread(
+                    target=self._spotify_stream_only_worker, args=(track,), daemon=True
+                ).start()
+
+        elif self.active_left_panel == "folder":
+            sel = self.folder_listbox.curselection()
+            if sel:
+                target_folder = self.folder_listbox.get(sel[0])
+                self._set_status(f"Descargando y guardando en '{Path(target_folder).name}'...", COLORS["accent_soft"])
+                threading.Thread(
+                    target=self._spotify_download_worker, args=(track, True, "", target_folder), daemon=True
+                ).start()
+            else:
+                self._set_status("Sin carpeta seleccionada — reproduciendo sin guardar...", COLORS["accent_soft"])
+                threading.Thread(
+                    target=self._spotify_stream_only_worker, args=(track,), daemon=True
+                ).start()
+
         else:
-            self._set_status("Descargando y reproduciendo seleccion de Spotify...", COLORS["accent_soft"])
-            threading.Thread(target=self._spotify_download_worker, args=(track, True, ""), daemon=True).start()
+            self._set_status("Descargando y reproduciendo...", COLORS["accent_soft"])
+            threading.Thread(
+                target=self._spotify_download_worker, args=(track, True, "", ""), daemon=True
+            ).start()
 
     def _preview_selected_spotify(self):
         track = self._get_selected_spotify_track()
@@ -1288,22 +1493,22 @@ class Reproductor:
             return
         title = track.get("title", "Sin titulo")
         artist = track.get("artist", "Desconocido")
+        album = track.get("album", "Desconocido")
         self.track_title_label.config(text=title)
-        self.track_artist_label.config(text=f"{artist}  |  {track.get('album', 'Desconocido')}")
+        self.track_artist_label.config(text=f"{artist}  |  {album}")
         cover_source = track.get("cover_url", "")
         self._set_now_card_track(title, artist, cover_source)
         self.top_preview_title.config(text=title)
-        self.top_preview_artist.config(text=artist)
+        self.top_preview_artist.config(text=f"{artist}  |  {album}")
         if cover_source:
             try:
-                img_big = self._load_image(cover_source, self.main_cover_size)
-                self.cover_label.config(image=img_big)
-                self.cover_label.image = img_big
-                img_small = self._load_image(cover_source, (52, 52))
-                self.top_preview_image.config(image=img_small)
-                self.top_preview_image.image = img_small
+                img = self._load_image(cover_source, (220, 220))
+                self.cover_label.config(image=img)
+                self.cover_label.image = img
             except Exception:
-                self._set_cover_placeholder("Spotify")
+                self._set_big_cover_placeholder()
+        else:
+            self._set_big_cover_placeholder()
 
     def _download_selected_spotify(self):
         track = self._get_selected_spotify_track()
@@ -1312,14 +1517,45 @@ class Reproductor:
             return
         self._set_status("Descargando desde YouTube...", COLORS["accent_soft"])
         target_playlist = self._get_selected_playlist_name() if self.active_left_panel == "playlist" else ""
-        threading.Thread(target=self._spotify_download_worker, args=(track, False, target_playlist), daemon=True).start()
+        threading.Thread(
+            target=self._spotify_download_worker, args=(track, False, target_playlist), daemon=True
+        ).start()
 
-    def _spotify_download_worker(self, track, autoplay=False, target_playlist=""):
+    def _spotify_stream_only_worker(self, track):
         try:
             local_audio = self.downloader.ensure_audio(track)
             local_cover = self.downloader.ensure_cover(track)
             meta = self._extract_metadata(
                 local_audio,
+                overrides={
+                    "title": track.get("title", ""),
+                    "artist": track.get("artist", ""),
+                    "album": track.get("album", ""),
+                    "genre": track.get("genre", "Desconocido"),
+                    "cover_path": local_cover,
+                    "source": "spotify_stream_only",
+                },
+            )
+            self.ui_queue.put(("spotify_stream_ok", meta))
+        except Exception as exc:
+            self.ui_queue.put(("spotify_download_err", str(exc)))
+
+    def _spotify_download_worker(self, track, autoplay=False, target_playlist="", target_folder=""):
+        try:
+            local_audio = self.downloader.ensure_audio(track)
+            local_cover = self.downloader.ensure_cover(track)
+
+            final_audio = local_audio
+            if target_folder:
+                dest_dir = Path(target_folder)
+                dest_dir.mkdir(parents=True, exist_ok=True)
+                dest_file = dest_dir / Path(local_audio).name
+                if dest_file.resolve() != Path(local_audio).resolve():
+                    shutil.copy2(local_audio, dest_file)
+                final_audio = str(dest_file)
+
+            meta = self._extract_metadata(
+                final_audio,
                 overrides={
                     "title": track.get("title", ""),
                     "artist": track.get("artist", ""),
@@ -1333,7 +1569,7 @@ class Reproductor:
             if target_playlist and target_playlist in self.playlists and meta["id"] not in self.playlists[target_playlist]:
                 self.playlists[target_playlist].append(meta["id"])
             self._save_data()
-            self.ui_queue.put(("spotify_download_ok", meta, autoplay, target_playlist))
+            self.ui_queue.put(("spotify_download_ok", meta, autoplay, target_playlist, target_folder))
         except Exception as exc:
             self.ui_queue.put(("spotify_download_err", str(exc)))
 
@@ -1360,13 +1596,23 @@ class Reproductor:
                     msg = f"Error buscando en Spotify: {item[1]}"
                     self._set_status(msg, COLORS["warn"])
                     messagebox.showerror("Error", msg)
+                elif kind == "spotify_stream_ok":
+                    meta = item[1]
+                    self._set_status(f"Reproduciendo (sin guardar): {meta.get('title', '')}", COLORS["accent_soft"])
+                    self._play_track(meta)
+                    self.spotify_auto_play_in_progress = False
                 elif kind == "spotify_download_ok":
                     meta = item[1]
                     autoplay = item[2] if len(item) > 2 else False
                     playlist_name = item[3] if len(item) > 3 else ""
+                    folder_name = item[4] if len(item) > 4 else ""
                     self._refresh_all_views()
-                    if playlist_name:
+                    if folder_name:
+                        self._set_status(f"Guardada en '{Path(folder_name).name}': {meta.get('title', '')}", COLORS["ok"])
+                        self._on_folder_selected()
+                    elif playlist_name:
                         self._set_status(f"Agregada a '{playlist_name}': {meta.get('title', '')}", COLORS["ok"])
+                        self._refresh_playlist_songs()
                     else:
                         self._set_status(f"Descargada: {meta.get('title', '')}", COLORS["ok"])
                     if autoplay:

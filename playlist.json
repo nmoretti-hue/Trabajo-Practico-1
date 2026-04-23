@@ -109,6 +109,50 @@
       "duration": 116.016,
       "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\53ndmbUXcAR7leedOnMHij.jpg",
       "source": "spotify_youtube"
+    },
+    {
+      "id": "c96448a8464ff9d7ab1053a890c9bfa2",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\me-llama-momo-4l0OahdaPEa5kLVKbAU0mn.mp3",
+      "title": "Me llama",
+      "artist": "Momo",
+      "album": "Me llama",
+      "genre": "Desconocido",
+      "duration": 207.792,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\4l0OahdaPEa5kLVKbAU0mn.jpg",
+      "source": "spotify_youtube"
+    },
+    {
+      "id": "97b6f58b85be209ed83fcd095de839d7",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\el-bomb-n-los-palmeras-68drjp77R32xEkzP1vxlF6.mp3",
+      "title": "El Bombón",
+      "artist": "Los Palmeras",
+      "album": "Un Sentimiento",
+      "genre": "Desconocido",
+      "duration": 200.616,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\68drjp77R32xEkzP1vxlF6.jpg",
+      "source": "spotify_youtube"
+    },
+    {
+      "id": "c3f39edfe30b2dbb8827dbb72c13bfa2",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\manteca-mantecosa-remix-chiky-7KDskxUhTgeqI0wnRrcc9C.mp3",
+      "title": "Manteca Mantecosa - Remix",
+      "artist": "CHIKY",
+      "album": "Manteca Mantecosa (Remix)",
+      "genre": "Desconocido",
+      "duration": 82.56,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\7KDskxUhTgeqI0wnRrcc9C.jpg",
+      "source": "spotify_youtube"
+    },
+    {
+      "id": "49aa1384d871f90a9c5b27b38b6af760",
+      "path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\musica\\le-damos-duro-yets-manteca-5XqQsl5WHuLa1uLRxvWuaV.mp3",
+      "title": "Le damos duro",
+      "artist": "Yets Manteca",
+      "album": "Le damos duro",
+      "genre": "Desconocido",
+      "duration": 82.56,
+      "cover_path": "C:\\Users\\nicom\\OneDrive\\Documentos\\GitHub\\Trabajo-Practico-1\\cache\\covers\\5XqQsl5WHuLa1uLRxvWuaV.jpg",
+      "source": "spotify_youtube"
     }
   ],
   "playlists": {
@@ -119,7 +163,9 @@
     "koko": [
       "0d30e2c649e1822a5ecf40bd04f5d154",
       "7e14f7df3f8f3870179cc5f8d990d66e",
-      "bf70f904df9545105b40da98b5b4f56c"
+      "bf70f904df9545105b40da98b5b4f56c",
+      "fe6d61001ac4b4baebcb1e68bac28773",
+      "c3f39edfe30b2dbb8827dbb72c13bfa2"
     ]
   }
 }
